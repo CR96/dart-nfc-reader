@@ -1,20 +1,18 @@
 package com.grizzhacks.dartreader;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
 import android.os.Build;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
