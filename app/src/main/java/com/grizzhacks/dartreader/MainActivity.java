@@ -78,15 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (ultralight != null) {
 
-                // You can only run one of these. You can't open two connections simultaneously.
+                // You can only run one of these methods. You can't open two connections simultaneously.
 
                 // WARNING: The writeTag() method will overwrite activation information.
                 // Do not use on a DART pass you wish to keep.
 
                 // writeTagInfo(ultralight);
-
                 DartCard dartCard = getTagInfo(ultralight);
-
 
                 TextView txtCardNumber = findViewById(R.id.txtCardNumber);
                 TextView txtValidFrom = findViewById(R.id.txtValidFrom);
