@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("unused")
     private void writeTagInfo(final MifareUltralight ultralight) {
         Thread thread = new Thread(
                 new Runnable() {
@@ -108,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             ultralight.connect();
 
-                            // Test writing data to a userdata page on the NFC tag
+                            /* Test writing data to a userdata page on the NFC tag.
+                               Page 1 is manufacturer information.
+                               To the best of our knowledge,
+                               Pages 2-4 are where userdata is stored. */
                             ultralight.writePage(3, "test".getBytes(StandardCharsets.UTF_8));
 
                             ultralight.close();
