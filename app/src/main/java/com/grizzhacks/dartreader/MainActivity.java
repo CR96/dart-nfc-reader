@@ -22,6 +22,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+// TODO: If the application crashes on the Android emulator,
+// comment out the ForegroundDispatch line in onResume().
+// Unfortunately the Android emulator does not support NFC hardware emulation.
 public class MainActivity extends AppCompatActivity {
 
     private AnimationDrawable animationDrawable;
@@ -53,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
         // animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         // animationDrawable.setEnterFadeDuration(3000);
         // animationDrawable.setExitFadeDuration(2000);
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        // TODO: If the application crashes on the Android emulator, comment this line out.
+        // Unfortunately the Android emulator does not support NFC hardware emulation.
         mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
         if (animationDrawable != null && !animationDrawable.isRunning()) {
@@ -151,6 +154,11 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             ultralight.connect();
+
+                            /* 4 pages in NFC Ultralight.
+                               Page 1 is manufacturer data, Pages 2-4 are user data.
+                               This reads data from page 3 as a proof of concept.
+                               The data returned is not human-readable; it's likely encrypted. */
                             byte[] byteArray = ultralight.readPages(3);
                             Log.d("DATA: ", new String(byteArray, StandardCharsets.UTF_8));
                             ultralight.close();
