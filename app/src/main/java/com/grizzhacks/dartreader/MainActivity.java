@@ -2,19 +2,23 @@ package com.grizzhacks.dartreader;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
 import android.os.Build;
+
 import android.os.Bundle;
 import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
+    private AnimationDrawable animationDrawable;
 
     // Credit to this StackOverflow post for the NFC boilerplate code
     // https://stackoverflow.com/questions/5546932/how-to-read-and-write-android-nfc-tags
@@ -36,12 +40,21 @@ public class MainActivity extends AppCompatActivity {
 
         mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(
                 this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(3000);
+        animationDrawable.setExitFadeDuration(2000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+
+        if (animationDrawable != null && !animationDrawable.isRunning()) {
+            animationDrawable.start();
+        }
     }
 
     @Override
@@ -49,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         if (mAdapter != null) {
             mAdapter.disableForegroundDispatch(this);
+
+            if (animationDrawable != null && animationDrawable.isRunning()) {
+                animationDrawable.stop();
+            }
         }
     }
 
