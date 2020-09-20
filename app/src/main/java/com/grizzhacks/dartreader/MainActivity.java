@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -143,7 +144,10 @@ public class MainActivity extends AppCompatActivity {
                                This reads data from page 3 as a proof of concept.
                                The data returned is not human-readable; it's likely encrypted. */
                             byte[] byteArray = ultralight.readPages(3);
+
+                            // TODO: Determine encoding of NFC data
                             Log.d("DATA: ", new String(byteArray, StandardCharsets.UTF_8));
+
                             ultralight.close();
 
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
@@ -170,6 +174,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        Toast.makeText(
+                MainActivity.this,
+                "DART Pass Detected",
+                Toast.LENGTH_LONG)
+                .show();
+
         return dartCard;
     }
 
