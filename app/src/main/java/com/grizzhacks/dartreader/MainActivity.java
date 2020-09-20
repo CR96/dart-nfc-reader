@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
                 this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
         ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.constraintLayout);
-        animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
-        animationDrawable.setEnterFadeDuration(3000);
-        animationDrawable.setExitFadeDuration(2000);
+
+        // TODO: Animated gradient is currently broken
+        // animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
+        // animationDrawable.setEnterFadeDuration(3000);
+        // animationDrawable.setExitFadeDuration(2000);
     }
 
     @Override

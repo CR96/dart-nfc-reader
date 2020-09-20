@@ -46,9 +46,7 @@
     <TextView
         android:layout_width="408dp"
         android:layout_height="93dp"
-        android:layout_radius="50%"
         android:background="#F9F8BE"
-        android:layout-radius="50%"
         android:text="Card Number: ##-####-####"
         android:textAlignment="center"
         android:textAllCaps="false"
