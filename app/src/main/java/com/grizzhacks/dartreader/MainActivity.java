@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Build;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         // animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         // animationDrawable.setEnterFadeDuration(3000);
         // animationDrawable.setExitFadeDuration(2000);
+
+
+
     }
 
     @Override
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -93,7 +99,18 @@ public class MainActivity extends AppCompatActivity {
 
                 // writeTagInfo(ultralight);
 
-                getTagInfo(ultralight);
+                DartCard dartCard = getTagInfo(ultralight);
+
+
+                TextView txtCardNumber = findViewById(R.id.txtCardNumber);
+                TextView txtValidFrom = findViewById(R.id.txtValidFrom);
+                TextView txtValidThru = findViewById(R.id.txtValidThru);
+                TextView txtDaysLeft = findViewById(R.id.txtDaysLeft);
+
+                txtCardNumber.setText(dartCard.cardNumber);
+                txtValidFrom.setText("Valid From: " + dartCard.activationDateString);
+                txtValidThru.setText("Valid Thru: " + dartCard.dateValidThru);
+                txtDaysLeft.setText("This Card Expires in " + dartCard.dateDaysLeft + " Days");
             }
         }
     }
@@ -120,7 +137,13 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    private void getTagInfo(final MifareUltralight ultralight) {
+    private DartCard getTagInfo(final MifareUltralight ultralight) {
+
+        // TODO: Mock data. This information should be on the card
+        final DartCard dartCard = new DartCard();
+        dartCard.cardNumber = "0100013400";
+        dartCard.activationDateString = "20200901";
+
         Thread thread = new Thread(
                 new Runnable() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -132,21 +155,17 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("DATA: ", new String(byteArray, StandardCharsets.UTF_8));
                             ultralight.close();
 
-                            // TODO: Mock data. This information should be on the card
-                            DartCard dartCard = new DartCard();
-                            dartCard.cardNumber = "0100013400";
-                            dartCard.activationDateString = "20200901";
-
                             DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
                             LocalDate activationDate = LocalDate.parse(
                                     dartCard.activationDateString, formatter);
 
                             LocalDate expirationDate = activationDate.plusDays(31);
+                            dartCard.dateValidThru = expirationDate.toString();
 
                             LocalDate localDate = LocalDate.now();
 
                             long daysLeft = localDate.until(expirationDate, ChronoUnit.DAYS);
-                            Log.d("DAYS LEFT", String.valueOf(daysLeft));
+                            dartCard.dateDaysLeft = String.valueOf(daysLeft);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -155,10 +174,13 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         thread.start();
+        return dartCard;
     }
 
     static class DartCard {
         String cardNumber = "0000000000";
         String activationDateString = "2020-03-11";
+        String dateValidThru = "";
+        String dateDaysLeft = "";
     }
 }
