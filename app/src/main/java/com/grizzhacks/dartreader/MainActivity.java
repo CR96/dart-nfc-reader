@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 // TODO: If the application crashes on the Android emulator,
 // comment out the ForegroundDispatch line in onResume().
@@ -126,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Mock data. This information should be on the card
         final DartCard dartCard = new DartCard();
-        dartCard.cardNumber = "0100013400";
-        dartCard.activationDateString = "20200901";
+        dartCard.cardNumber = "Card Number: 0100013400";
+        dartCard.activationDateString = "2020-09-01";
 
         Thread thread = new Thread(
                 new Runnable() {
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("DATA: ", new String(byteArray, StandardCharsets.UTF_8));
                             ultralight.close();
 
-                            DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
                             LocalDate activationDate = LocalDate.parse(
                                     dartCard.activationDateString, formatter);
 
@@ -164,12 +165,17 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return dartCard;
     }
 
     static class DartCard {
         String cardNumber = "0000000000";
-        String activationDateString = "2020-03-11";
+        String activationDateString = "2020-09-11";
         String dateValidThru = "";
         String dateDaysLeft = "";
     }
