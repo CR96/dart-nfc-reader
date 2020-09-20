@@ -16,8 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class MainActivity extends AppCompatActivity {
+
     private AnimationDrawable animationDrawable;
 
     // Credit to this StackOverflow post for the NFC boilerplate code
@@ -127,6 +131,23 @@ public class MainActivity extends AppCompatActivity {
                             byte[] byteArray = ultralight.readPages(3);
                             Log.d("DATA: ", new String(byteArray, StandardCharsets.UTF_8));
                             ultralight.close();
+
+                            // TODO: Mock data. This information should be on the card
+                            DartCard dartCard = new DartCard();
+                            dartCard.cardNumber = "0100013400";
+                            dartCard.activationDateString = "20200901";
+
+                            DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
+                            LocalDate activationDate = LocalDate.parse(
+                                    dartCard.activationDateString, formatter);
+
+                            LocalDate expirationDate = activationDate.plusDays(31);
+
+                            LocalDate localDate = LocalDate.now();
+
+                            long daysLeft = localDate.until(expirationDate, ChronoUnit.DAYS);
+                            Log.d("DAYS LEFT", String.valueOf(daysLeft));
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -134,5 +155,10 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         thread.start();
+    }
+
+    static class DartCard {
+        String cardNumber = "0000000000";
+        String activationDateString = "2020-03-11";
     }
 }
