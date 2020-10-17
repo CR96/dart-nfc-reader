@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-// TODO: If the app crashes in the Android emulator, comment out the Foreground Dispatch line in OnResume()
 public class MainActivity extends AppCompatActivity {
 
     private AnimationDrawable animationDrawable;
@@ -62,10 +61,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // TODO: To Judges: If the app crashes on the Android emulator, comment this line out.
-        // Unfortunately the Android emulator doesn't support NFC hardware emulation
-       //  mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+        mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
         if (animationDrawable != null && !animationDrawable.isRunning()) {
             animationDrawable.start();
